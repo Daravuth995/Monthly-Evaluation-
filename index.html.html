@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Evaluations</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4A90E2;
+            margin-bottom: 40px;
+        }
+
+        .student {
+            background: #ffffff;
+            border-left: 8px solid #4A90E2;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+
+        .student:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .student h2 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .student p {
+            margin: 8px 0;
+            display: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .student.open p {
+            display: block;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const students = document.querySelectorAll(".student");
+            students.forEach(student => {
+                student.addEventListener("click", () => {
+                    student.classList.toggle("open");
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Monthly Student Evaluations - 2025</h1>
+
+    <div class="student" id="stu001">
+        <h2>Sarita Yin (stu001)</h2>
+        <p><strong>Strengths:</strong> Sarita Yin is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu002">
+        <h2>Vanna (stu002)</h2>
+        <p><strong>Strengths:</strong> Vanna is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu003">
+        <h2>Ran Piseth (stu003)</h2>
+        <p><strong>Strengths:</strong> Ran Piseth is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu004">
+        <h2>Chanrachna Oum (stu004)</h2>
+        <p><strong>Strengths:</strong> Chanrachna Oum is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu005">
+        <h2>Sean Lavy (stu005)</h2>
+        <p><strong>Strengths:</strong> Sean Lavy is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu006">
+        <h2>Sroeun Sophea (stu006)</h2>
+        <p><strong>Strengths:</strong> Sroeun Sophea is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu007">
+        <h2>Ban Sophea (stu007)</h2>
+        <p><strong>Strengths:</strong> Ban Sophea is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu008">
+        <h2>Kean Kimhour (stu008)</h2>
+        <p><strong>Strengths:</strong> Kean Kimhour is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu009">
+        <h2>Biya (stu009)</h2>
+        <p><strong>Strengths:</strong> Biya is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu010">
+        <h2>Phat Khemcheat (stu010)</h2>
+        <p><strong>Strengths:</strong> Phat Khemcheat is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu011">
+        <h2>Yon Thavika (stu011)</h2>
+        <p><strong>Strengths:</strong> Yon Thavika is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu012">
+        <h2>Chut Cheata (stu012)</h2>
+        <p><strong>Strengths:</strong> Chut Cheata is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu013">
+        <h2>Keng Bora (stu013)</h2>
+        <p><strong>Strengths:</strong> Keng Bora is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu014">
+        <h2>Yin Vouchngin (stu014)</h2>
+        <p><strong>Strengths:</strong> Yin Vouchngin is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu015">
+        <h2>Vatana (stu015)</h2>
+        <p><strong>Strengths:</strong> Vatana is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu016">
+        <h2>Channy (stu016)</h2>
+        <p><strong>Strengths:</strong> Channy is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu017">
+        <h2>Wat Domboukkpous (stu017)</h2>
+        <p><strong>Strengths:</strong> Wat Domboukkpous is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu018">
+        <h2>Kompheak (stu018)</h2>
+        <p><strong>Strengths:</strong> Kompheak is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu019">
+        <h2>Daly (stu019)</h2>
+        <p><strong>Strengths:</strong> Daly is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu020">
+        <h2>Vouch Neang (stu020)</h2>
+        <p><strong>Strengths:</strong> Vouch Neang is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu021">
+        <h2>Sorm Seyha (stu021)</h2>
+        <p><strong>Strengths:</strong> Sorm Seyha is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu022">
+        <h2>Rom Sopheaktra (stu022)</h2>
+        <p><strong>Strengths:</strong> Rom Sopheaktra is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu023">
+        <h2>Punleu Chhon (stu023)</h2>
+        <p><strong>Strengths:</strong> Punleu Chhon is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu024">
+        <h2>Venerable Oudom (stu024)</h2>
+        <p><strong>Strengths:</strong> Venerable Oudom is doing well in participation and attentiveness.</p>
+        <p><strong>Weaknesses:</strong> Needs to improve written grammar and confidence in speaking.</p>
+        <p><strong>Suggestions for Improvement:</strong> Practice speaking exercises and review basic grammar rules.</p>
+    </div>
+    
+    <div class="student" id="stu025">
+        <h2>New Student 25 (stu025)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="student" id="stu026">
+        <h2>New Student 26 (stu026)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="student" id="stu027">
+        <h2>New Student 27 (stu027)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="student" id="stu028">
+        <h2>New Student 28 (stu028)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="student" id="stu029">
+        <h2>New Student 29 (stu029)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="student" id="stu030">
+        <h2>New Student 30 (stu030)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="student" id="stu031">
+        <h2>New Student 31 (stu031)</h2>
+        <p><strong>Strengths:</strong> To be added.</p>
+        <p><strong>Weaknesses:</strong> To be added.</p>
+        <p><strong>Suggestions for Improvement:</strong> To be added.</p>
+    </div>
+    
+    <div class="footer">
+        © 2025 Teacher Evaluation System. All rights reserved.
+    </div>
+</body>
+</html>
