@@ -1,57 +1,612 @@
 <!DOCTYPE html>
-<html lang="km">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>វគ្គពង្រឹងការនិយាយអង់គ្លេស</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Poppins:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-  </head>
-  <body>
-    <div class="particles" id="particles"></div>
-    <div class="container">
-      <h1 class="animated-headline">វគ្គពង្រឹងការនិយាយអង់គ្លេស! រយៈពេលខ្លី! 30ថ្ងៃ!</h1>
-      <div class="subheadline">
-        <ul>
-          <li class="subheadline-item">ពង្រឹងសមត្ថភាពទំនាក់ទំនង</li>
-          <li class="subheadline-item">
-            មូលដ្ឋានគ្រិះនៃការបញ្ចេញសម្លេងត្រូវតាមស្តង់ដា
-          </li>
-          <li class="subheadline-item">
-            តិចនិចក្នុងការនិយាយ សន្ទនា ឲ្យមានភាពទាក់ទាញ
-          </li>
-        </ul>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Evaluation Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --dark: #212529;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: var(--dark);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      margin: 20px;
+      width: 90%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2rem;
+      background: linear-gradient(to right, #4361ee, #3a0ca3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, #4361ee, #3a0ca3);
+      border-radius: 2px;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 25px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 20px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+      background-color: white;
+    }
+
+    input:hover {
+      border-color: #adb5bd;
+    }
+
+    label {
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      background: white;
+      padding: 0 5px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .evaluation {
+      display: none;
+      margin-top: 30px;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .card {
+      display: none;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 20px 0;
+      background: white;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-left: 5px solid var(--accent);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+    }
+
+    .card h3 {
+      margin: 0 0 15px 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .card strong {
+      color: var(--secondary);
+    }
+
+    .success {
+      animation: cardEntrance 0.8s ease-out forwards;
+    }
+
+    /* New styles for teacher editing */
+    .edit-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: auto;
+      font-size: 14px;
+    }
+    
+    .edit-btn:hover {
+      background: var(--secondary);
+    }
+    
+    .save-btn {
+      display: none;
+      background: #4CAF50;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: auto;
+      font-size: 14px;
+    }
+    
+    .editable {
+      border: 1px dashed transparent;
+      padding: 2px 5px;
+      margin: 0 2px;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .editable-active {
+      border: 1px dashed var(--accent);
+      background: rgba(72, 149, 239, 0.1);
+    }
+    
+    .teacher-controls {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: none;
+    }
+    
+    .teacher-login {
+      margin-top: 30px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    
+    .teacher-login h3 {
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes cardEntrance {
+      from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+      }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent);
+      opacity: 0;
+      animation: confetti 3s ease-out forwards;
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(72, 149, 239, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(72, 149, 239, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(72, 149, 239, 0); }
+    }
+
+    .emoji {
+      font-size: 1.2rem;
+      margin-right: 5px;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h2 class="floating">📊 Student Evaluation Portal</h2>
+    
+    <div class="input-group">
+      <label for="studentId">Student ID</label>
+      <input type="text" id="studentId" placeholder="Enter your Student ID" />
+    </div>
+    
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your Password" />
+    </div>
+    
+    <button onclick="login()" class="pulse">🔑 Access Evaluation</button>
+    
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Loading your evaluation...</p>
+    </div>
+
+    <div id="evaluation" class="evaluation">
+      <div id="stu001" class="card">
+        <button class="edit-btn" onclick="toggleEdit('stu001')">✏️ Edit</button>
+        <button class="save-btn" onclick="saveEvaluation('stu001')">💾 Save</button>
+        <h3>👩‍🎓 <span class="editable" data-field="name">Sarita Yin</span></h3>
+        <p>
+          <span class="emoji">💪</span><strong>Strength:</strong> 
+          <span class="editable" data-field="strength">Communicates ideas clearly</span>.<br>
+          <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+          <span class="editable" data-field="weakness">Needs to participate more in class</span>.<br>
+          <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+          <span class="editable" data-field="improvement">Speak up more confidently</span>.
+        </p>
       </div>
-      <a href="https://t.me/alita995" class="register-btn" target="_blank">
-        <i class="fab fa-telegram"></i> ចុចត្រង់នេះដើម្បីចុះឈ្មោះ Telegram
-      </a>
-
-      <section class="testimonial">
-        <h2 class="testimonial-heading">
-          រួចរាល់ក្នុងការផ្លាស់ប្តូរការនិយាយរបស់អ្នករឺនៅ?
-        </h2>
-        <div class="testimonial-content">
-          <p>
-            អ្នកចាស់ៗបាននិយាយថា: "វគ្គនេះជួយឲ្យខ្ញុំមានទំនុកចិត្តក្នុងការនិយាយជាភាសាអង់គ្លេសយ៉ាងច្បាស់។"
-          </p>
-          <a href="https://t.me/alita995" class="testimonial-btn"
-            >ចូលរួមឥឡូវនេះ</a
-          >
-        </div>
-      </section>
+      <div id="stu002" class="card">
+        <button class="edit-btn" onclick="toggleEdit('stu002')">✏️ Edit</button>
+        <button class="save-btn" onclick="saveEvaluation('stu002')">💾 Save</button>
+        <h3>👨‍🎓 <span class="editable" data-field="name">Vanna</span></h3>
+        <p>
+          <span class="emoji">💪</span><strong>Strength:</strong> 
+          <span class="editable" data-field="strength">Excellent grammar</span>.<br>
+          <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+          <span class="editable" data-field="weakness">Listening comprehension</span>.<br>
+          <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+          <span class="editable" data-field="improvement">Practice with audio materials</span>.
+        </p>
+      </div>
+      <div id="stu003" class="card">
+        <button class="edit-btn" onclick="toggleEdit('stu003')">✏️ Edit</button>
+        <button class="save-btn" onclick="saveEvaluation('stu003')">💾 Save</button>
+        <h3>👨‍🎓 <span class="editable" data-field="name">Ran Piseth</span></h3>
+        <p>
+          <span class="emoji">💪</span><strong>Strength:</strong> 
+          <span class="editable" data-field="strength">Good teamwork</span>.<br>
+          <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+          <span class="editable" data-field="weakness">Pronunciation</span>.<br>
+          <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+          <span class="editable" data-field="improvement">Read aloud daily</span>.
+        </p>
+      </div>
+      <!-- Additional student cards would follow the same pattern -->
+      <div id="stu031" class="card">
+        <button class="edit-btn" onclick="toggleEdit('stu031')">✏️ Edit</button>
+        <button class="save-btn" onclick="saveEvaluation('stu031')">💾 Save</button>
+        <h3>👩‍🎓 <span class="editable" data-field="name">Student Name 31</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending evaluation...</em>
+        </p>
+      </div>
     </div>
 
-    <div class="floating-icons">
-      <a href="https://t.me/alita995" class="telegram-float" target="_blank">
-        <i class="fab fa-telegram-plane"></i>
-      </a>
+    <!-- Teacher Login Section -->
+    <div class="teacher-login" id="teacherLogin">
+      <h3>Teacher Access</h3>
+      <div class="input-group">
+        <label for="teacherPassword">Teacher Password</label>
+        <input type="password" id="teacherPassword" placeholder="Enter Teacher Password" />
+      </div>
+      <button onclick="teacherLogin()">🔓 Unlock Editing</button>
     </div>
-  </body>
+  </div>
+
+  <script>
+    const studentData = {
+      stu001: "yJq39P!n",
+      stu002: "bNj2Qw7!",
+      stu003: "vKz41Cp@",
+      stu004: "tVt61GxP!",
+      stu005: "lSx88Jh#",
+      stu006: "qFb49VvB!",
+      stu007: "hPb52TzM@",
+      stu008: "rCk34Nw#",
+      stu009: "mJs55LzF!",
+      stu010: "kWp61DsT@",
+      stu011: "jRq30GxM!",
+      stu012: "iSc32AwP@",
+      stu013: "tUe89VbZ!",
+      stu014: "gXy72LwA@",
+      stu015: "eNf50QcJ!",
+      stu016: "pKr29UvB@",
+      stu017: "fCp63WhM!",
+      stu018: "aBx34TzR@",
+      stu019: "wPo71VrD!",
+      stu020: "sQa93KhB@",
+      stu021: "pGd25VtK!",
+      stu022: "yUq12BwP@",
+      stu023: "jWx76SgL!",
+      stu024: "rZc57VjX@",
+      stu025: "gZp81UtM!",
+      stu026: "cYv65KrS@",
+      stu027: "oTx37TjG!",
+      stu028: "vLm93FgB@",
+      stu029: "pKq12MsT!",
+      stu030: "wNz76FpJ@",
+      stu031: "xYs43DzL!"
+    };
+
+    // Teacher password as requested
+    const teacherPassword = "Ra30121995";
+    let editModeEnabled = false;
+
+    function login() {
+      const id = document.getElementById("studentId").value.trim();
+      const pw = document.getElementById("password").value.trim();
+      const loading = document.getElementById("loading");
+
+      // Show loading animation
+      loading.style.display = "block";
+      
+      // Simulate loading delay
+      setTimeout(() => {
+        if (studentData[id] && studentData[id] === pw) {
+          document.getElementById("evaluation").style.display = "block";
+          loading.style.display = "none";
+
+          const cards = document.querySelectorAll(".card");
+          cards.forEach(card => card.style.display = "none");
+
+          const studentCard = document.getElementById(id);
+          if (studentCard) {
+            studentCard.classList.add("success");
+            studentCard.style.display = "block";
+            createConfetti();
+          }
+        } else {
+          loading.style.display = "none";
+          alert("Invalid ID or password. Please try again.");
+        }
+      }, 1500);
+    }
+
+    function teacherLogin() {
+      const pw = document.getElementById("teacherPassword").value.trim();
+      if (pw === teacherPassword) {
+        editModeEnabled = true;
+        alert("Teacher edit mode enabled. You can now edit student evaluations.");
+        // Show all edit buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.style.display = 'block';
+        });
+      } else {
+        alert("Incorrect teacher password. Please try again.");
+      }
+    }
+
+    function toggleEdit(studentId) {
+      if (!editModeEnabled) {
+        alert("Please login as teacher first using the teacher password.");
+        return;
+      }
+      
+      const card = document.getElementById(studentId);
+      const editBtn = card.querySelector('.edit-btn');
+      const saveBtn = card.querySelector('.save-btn');
+      const editables = card.querySelectorAll('.editable');
+      
+      if (editBtn.style.display === 'none') {
+        // Switch back to view mode
+        editBtn.style.display = 'block';
+        saveBtn.style.display = 'none';
+        editables.forEach(el => {
+          el.contentEditable = false;
+          el.classList.remove('editable-active');
+        });
+      } else {
+        // Switch to edit mode
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'block';
+        editables.forEach(el => {
+          el.contentEditable = true;
+          el.classList.add('editable-active');
+        });
+        // Focus on the first editable field
+        if (editables.length > 0) {
+          editables[0].focus();
+        }
+      }
+    }
+    
+    function saveEvaluation(studentId) {
+      const card = document.getElementById(studentId);
+      const editBtn = card.querySelector('.edit-btn');
+      const saveBtn = card.querySelector('.save-btn');
+      const editables = card.querySelectorAll('.editable');
+      
+      // Switch back to view mode
+      editBtn.style.display = 'block';
+      saveBtn.style.display = 'none';
+      editables.forEach(el => {
+        el.contentEditable = false;
+        el.classList.remove('editable-active');
+      });
+      
+      // Prepare data to save
+      const studentData = {
+        name: card.querySelector('[data-field="name"]').textContent,
+        strength: card.querySelector('[data-field="strength"]').textContent,
+        weakness: card.querySelector('[data-field="weakness"]').textContent,
+        improvement: card.querySelector('[data-field="improvement"]').textContent
+      };
+      
+      console.log("Saved data for", studentId, studentData);
+      alert("Evaluation saved for " + studentData.name);
+      
+      // In a real application, you would send this data to your server:
+      // fetch('/save-evaluation', {
+      //   method: 'POST',
+      //   body: JSON.stringify({studentId, ...studentData}),
+      //   headers: {'Content-Type': 'application/json'}
+      // });
+    }
+
+    function createConfetti() {
+      const colors = ['#4361ee', '#3a0ca3', '#4895ef', '#4cc9f0', '#f72585'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = -10 + 'px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = Math.random() * 10 + 5 + 'px';
+        confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => {
+          confetti.remove();
+        }, 5000);
+      }
+    }
+
+    // Add animation to inputs when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach((input, index) => {
+        setTimeout(() => {
+          input.classList.add('animate__animated', 'animate__fadeInUp');
+        }, index * 100);
+      });
+    });
+  </script>
+</body>
 </html>
