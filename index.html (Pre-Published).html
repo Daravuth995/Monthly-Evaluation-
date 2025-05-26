@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Evaluation Portal - Analytic Mode</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --dark: #212529;
+      --error: #f44336;
+      --poor: #ff4757;
+      --average: #ffa502;
+      --excellent: #2ed573;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: var(--dark);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      margin: 20px;
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2rem;
+      background: linear-gradient(to right, #4361ee, #3a0ca3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, #4361ee, #3a0ca3);
+      border-radius: 2px;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 25px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 20px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+      background-color: white;
+    }
+
+    input:hover {
+      border-color: #adb5bd;
+    }
+
+    label {
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      background: white;
+      padding: 0 5px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .evaluation {
+      display: none;
+      margin-top: 30px;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .card {
+      display: none;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 20px 0;
+      background: white;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-left: 5px solid var(--accent);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+    }
+
+    .card h3 {
+      margin: 15px 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .card strong {
+      color: var(--secondary);
+    }
+
+    .success {
+      animation: cardEntrance 0.8s ease-out forwards;
+    }
+
+    /* Error message styling */
+    .error-message {
+      color: var(--error);
+      text-align: center;
+      margin: 10px 0;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* Password hint */
+    .password-hint {
+      font-size: 0.8rem;
+      color: #666;
+      text-align: center;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .forgot-password {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .forgot-password a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes cardEntrance {
+      from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+      }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent);
+      opacity: 0;
+      animation: confetti 3s ease-out forwards;
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .emoji {
+      font-size: 1.2rem;
+      margin-right: 5px;
+    }
+
+    /* New styles for evaluation criteria */
+  /* Add this to your existing CSS */
+/* Add or replace these styles in your CSS section */
+
+.evaluation-criteria {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.criterion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.criterion label {
+  font-weight: 500;
+  color: var(--secondary);
+  white-space: nowrap; /* Prevent label wrapping */
+  margin: 0; /* Remove default margins */
+  position: static; /* Override any absolute positioning */
+  background: transparent; /* Remove white background if present */
+  padding: 0; /* Remove padding if present */
+}
+
+.score-input {
+  width: 60px;
+  padding: 8px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.score-input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .evaluation-criteria {
+    grid-template-columns: 1fr; /* Single column on small screens */
+  }
+}
+
+    /* Overall score display */
+    .overall-score {
+      text-align: center;
+      margin: 15px 0;
+      padding: 15px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .overall-score h4 {
+      margin: 0 0 10px 0;
+      color: var(--secondary);
+      font-size: 1.1rem;
+    }
+
+    .score-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Performance visualization */
+    .performance-visual {
+      height: 10px;
+      background: #e9ecef;
+      border-radius: 5px;
+      margin: 15px auto;
+      max-width: 300px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .performance-bar {
+      height: 100%;
+      width: 0%;
+      transition: all 0.5s ease;
+      position: relative;
+    }
+
+    .performance-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, 
+        var(--poor) 0%, 
+        var(--poor) 33%, 
+        var(--average) 33%, 
+        var(--average) 66%, 
+        var(--excellent) 66%, 
+        var(--excellent) 100%);
+      opacity: 0.2;
+    }
+
+    .performance-labels {
+      display: flex;
+      justify-content: space-between;
+      max-width: 300px;
+      margin: 5px auto 0;
+      font-size: 0.8rem;
+    }
+
+    .performance-label {
+      position: relative;
+      cursor: default;
+      transition: all 0.3s ease;
+    }
+
+    .performance-label:hover {
+      transform: translateY(-3px);
+    }
+
+    .performance-label.poor:hover {
+      color: var(--poor);
+    }
+
+    .performance-label.average:hover {
+      color: var(--average);
+    }
+
+    .performance-label.excellent:hover {
+      color: var(--excellent);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .evaluation-criteria {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .container {
+        padding: 25px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .evaluation-criteria {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h2>📊 Student Evaluation Portal</h2>
+    
+    <div class="input-group">
+      <label for="studentId">Student ID</label>
+      <input type="text" id="studentId" placeholder="Enter your Student ID (e.g. stu001)" />
+    </div>
+    
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your Password" />
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+    
+    <div class="password-hint" id="passwordHint"></div>
+    
+    <div class="forgot-password">
+      <a onclick="showPasswordHint()">Forgot your password?</a>
+    </div>
+    
+    <button onclick="login()">🔑 Access Evaluation</button>
+    
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Loading your evaluation...</p>
+    </div>
+
+    <div id="evaluation">
+
+<div id="stu001" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu001-pronunciation">Pronunciation</label>
+      <input type="number" id="stu001-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu001')">
+    </div>
+    <div class="criterion">
+      <label for="stu001-intonation">Intonation</label>
+      <input type="number" id="stu001-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu001')">
+    </div>
+    <div class="criterion">
+      <label for="stu001-communication">Communication</label>
+      <input type="number" id="stu001-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu001')">
+    </div>
+    <div class="criterion">
+      <label for="stu001-participation">Participation</label>
+      <input type="number" id="stu001-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu001')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu001-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu001-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👩‍🎓 <span>Sarita Yin</span></h3>
+  <p>
+ span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+  </p>
+</div>
+
+			<!-- Student 2 -->
+<div id="stu002" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu002-pronunciation">Pronunciation</label>
+      <input type="number" id="stu002-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu002')">
+    </div>
+    <div class="criterion">
+      <label for="stu002-intonation">Intonation</label>
+      <input type="number" id="stu002-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu002')">
+    </div>
+    <div class="criterion">
+      <label for="stu002-communication">Communication</label>
+      <input type="number" id="stu002-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu002')">
+    </div>
+    <div class="criterion">
+      <label for="stu002-participation">Participation</label>
+      <input type="number" id="stu002-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu002')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu002-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu002-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Vanna</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 3 -->
+<div id="stu003" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu003-pronunciation">Pronunciation</label>
+      <input type="number" id="stu003-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu003')">
+    </div>
+    <div class="criterion">
+      <label for="stu003-intonation">Intonation</label>
+      <input type="number" id="stu003-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu003')">
+    </div>
+    <div class="criterion">
+      <label for="stu003-communication">Communication</label>
+      <input type="number" id="stu003-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu003')">
+    </div>
+    <div class="criterion">
+      <label for="stu003-participation">Participation</label>
+      <input type="number" id="stu003-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu003')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu003-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu003-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Ran Piseth</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 4 -->
+<div id="stu004" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu004-pronunciation">Pronunciation</label>
+      <input type="number" id="stu004-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu004')">
+    </div>
+    <div class="criterion">
+      <label for="stu004-intonation">Intonation</label>
+      <input type="number" id="stu004-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu004')">
+    </div>
+    <div class="criterion">
+      <label for="stu004-communication">Communication</label>
+      <input type="number" id="stu004-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu004')">
+    </div>
+    <div class="criterion">
+      <label for="stu004-participation">Participation</label>
+      <input type="number" id="stu004-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu004')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu004-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu004-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Chanrachna Oum</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 5 -->
+<div id="stu005" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu005-pronunciation">Pronunciation</label>
+      <input type="number" id="stu005-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu005')">
+    </div>
+    <div class="criterion">
+      <label for="stu005-intonation">Intonation</label>
+      <input type="number" id="stu005-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu005')">
+    </div>
+    <div class="criterion">
+      <label for="stu005-communication">Communication</label>
+      <input type="number" id="stu005-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu005')">
+    </div>
+    <div class="criterion">
+      <label for="stu005-participation">Participation</label>
+      <input type="number" id="stu005-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu005')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu005-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu005-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Sean Lavy</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 6 -->
+<div id="stu006" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu006-pronunciation">Pronunciation</label>
+      <input type="number" id="stu006-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu006')">
+    </div>
+    <div class="criterion">
+      <label for="stu006-intonation">Intonation</label>
+      <input type="number" id="stu006-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu006')">
+    </div>
+    <div class="criterion">
+      <label for="stu006-communication">Communication</label>
+      <input type="number" id="stu006-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu006')">
+    </div>
+    <div class="criterion">
+      <label for="stu006-participation">Participation</label>
+      <input type="number" id="stu006-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu006')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu006-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu006-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Sroeun Sophea</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 7 -->
+<div id="stu007" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu007-pronunciation">Pronunciation</label>
+      <input type="number" id="stu007-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu007')">
+    </div>
+    <div class="criterion">
+      <label for="stu007-intonation">Intonation</label>
+      <input type="number" id="stu007-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu007')">
+    </div>
+    <div class="criterion">
+      <label for="stu007-communication">Communication</label>
+      <input type="number" id="stu007-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu007')">
+    </div>
+    <div class="criterion">
+      <label for="stu007-participation">Participation</label>
+      <input type="number" id="stu007-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu007')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu007-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu007-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Ban Sophea</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 8 -->
+<div id="stu008" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu008-pronunciation">Pronunciation</label>
+      <input type="number" id="stu008-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu008')">
+    </div>
+    <div class="criterion">
+      <label for="stu008-intonation">Intonation</label>
+      <input type="number" id="stu008-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu008')">
+    </div>
+    <div class="criterion">
+      <label for="stu008-communication">Communication</label>
+      <input type="number" id="stu008-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu008')">
+    </div>
+    <div class="criterion">
+      <label for="stu008-participation">Participation</label>
+      <input type="number" id="stu008-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu008')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu008-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu008-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Kean Kimhour</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 9 -->
+<div id="stu009" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu009-pronunciation">Pronunciation</label>
+      <input type="number" id="stu009-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu009')">
+    </div>
+    <div class="criterion">
+      <label for="stu009-intonation">Intonation</label>
+      <input type="number" id="stu009-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu009')">
+    </div>
+    <div class="criterion">
+      <label for="stu009-communication">Communication</label>
+      <input type="number" id="stu009-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu009')">
+    </div>
+    <div class="criterion">
+      <label for="stu009-participation">Participation</label>
+      <input type="number" id="stu009-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu009')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu009-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu009-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Biya</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 10 -->
+<div id="stu010" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu010-pronunciation">Pronunciation</label>
+      <input type="number" id="stu010-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu010')">
+    </div>
+    <div class="criterion">
+      <label for="stu010-intonation">Intonation</label>
+      <input type="number" id="stu010-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu010')">
+    </div>
+    <div class="criterion">
+      <label for="stu010-communication">Communication</label>
+      <input type="number" id="stu010-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu010')">
+    </div>
+    <div class="criterion">
+      <label for="stu010-participation">Participation</label>
+      <input type="number" id="stu010-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu010')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu010-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu010-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Phat Khemcheat</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 11 -->
+<div id="stu011" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu011-pronunciation">Pronunciation</label>
+      <input type="number" id="stu011-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu011')">
+    </div>
+    <div class="criterion">
+      <label for="stu011-intonation">Intonation</label>
+      <input type="number" id="stu011-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu011')">
+    </div>
+    <div class="criterion">
+      <label for="stu011-communication">Communication</label>
+      <input type="number" id="stu011-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu011')">
+    </div>
+    <div class="criterion">
+      <label for="stu011-participation">Participation</label>
+      <input type="number" id="stu011-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu011')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu011-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu011-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Yon Thavika</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 12 -->
+<div id="stu012" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu012-pronunciation">Pronunciation</label>
+      <input type="number" id="stu012-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu012')">
+    </div>
+    <div class="criterion">
+      <label for="stu012-intonation">Intonation</label>
+      <input type="number" id="stu012-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu012')">
+    </div>
+    <div class="criterion">
+      <label for="stu012-communication">Communication</label>
+      <input type="number" id="stu012-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu012')">
+    </div>
+    <div class="criterion">
+      <label for="stu012-participation">Participation</label>
+      <input type="number" id="stu012-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu012')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu012-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu012-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Chut Cheata</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 13 -->
+<div id="stu013" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu013-pronunciation">Pronunciation</label>
+      <input type="number" id="stu013-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu013')">
+    </div>
+    <div class="criterion">
+      <label for="stu013-intonation">Intonation</label>
+      <input type="number" id="stu013-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu013')">
+    </div>
+    <div class="criterion">
+      <label for="stu013-communication">Communication</label>
+      <input type="number" id="stu013-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu013')">
+    </div>
+    <div class="criterion">
+      <label for="stu013-participation">Participation</label>
+      <input type="number" id="stu013-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu013')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu013-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu013-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Keng Bora</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 14 -->
+<div id="stu014" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu014-pronunciation">Pronunciation</label>
+      <input type="number" id="stu014-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu014')">
+    </div>
+    <div class="criterion">
+      <label for="stu014-intonation">Intonation</label>
+      <input type="number" id="stu014-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu014')">
+    </div>
+    <div class="criterion">
+      <label for="stu014-communication">Communication</label>
+      <input type="number" id="stu014-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu014')">
+    </div>
+    <div class="criterion">
+      <label for="stu014-participation">Participation</label>
+      <input type="number" id="stu014-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu014')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu014-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu014-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Yin Vouchngin</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 15 -->
+<div id="stu015" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu015-pronunciation">Pronunciation</label>
+      <input type="number" id="stu015-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu015')">
+    </div>
+    <div class="criterion">
+      <label for="stu015-intonation">Intonation</label>
+      <input type="number" id="stu015-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu015')">
+    </div>
+    <div class="criterion">
+      <label for="stu015-communication">Communication</label>
+      <input type="number" id="stu015-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu015')">
+    </div>
+    <div class="criterion">
+      <label for="stu015-participation">Participation</label>
+      <input type="number" id="stu015-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu015')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu015-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu015-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Vatana</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 16 -->
+<div id="stu016" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu016-pronunciation">Pronunciation</label>
+      <input type="number" id="stu016-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu016')">
+    </div>
+    <div class="criterion">
+      <label for="stu016-intonation">Intonation</label>
+      <input type="number" id="stu016-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu016')">
+    </div>
+    <div class="criterion">
+      <label for="stu016-communication">Communication</label>
+      <input type="number" id="stu016-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu016')">
+    </div>
+    <div class="criterion">
+      <label for="stu016-participation">Participation</label>
+      <input type="number" id="stu016-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu016')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu016-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu016-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Channy</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 17 -->
+<div id="stu017" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu017-pronunciation">Pronunciation</label>
+      <input type="number" id="stu017-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu017')">
+    </div>
+    <div class="criterion">
+      <label for="stu017-intonation">Intonation</label>
+      <input type="number" id="stu017-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu017')">
+    </div>
+    <div class="criterion">
+      <label for="stu017-communication">Communication</label>
+      <input type="number" id="stu017-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu017')">
+    </div>
+    <div class="criterion">
+      <label for="stu017-participation">Participation</label>
+      <input type="number" id="stu017-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu017')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu017-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu017-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Wat Domboukkpous</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 18 -->
+<div id="stu018" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu018-pronunciation">Pronunciation</label>
+      <input type="number" id="stu018-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu018')">
+    </div>
+    <div class="criterion">
+      <label for="stu018-intonation">Intonation</label>
+      <input type="number" id="stu018-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu018')">
+    </div>
+    <div class="criterion">
+      <label for="stu018-communication">Communication</label>
+      <input type="number" id="stu018-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu018')">
+    </div>
+    <div class="criterion">
+      <label for="stu018-participation">Participation</label>
+      <input type="number" id="stu018-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu018')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu018-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu018-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Kompheak</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 19 -->
+<div id="stu019" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu019-pronunciation">Pronunciation</label>
+      <input type="number" id="stu019-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu019')">
+    </div>
+    <div class="criterion">
+      <label for="stu019-intonation">Intonation</label>
+      <input type="number" id="stu019-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu019')">
+    </div>
+    <div class="criterion">
+      <label for="stu019-communication">Communication</label>
+      <input type="number" id="stu019-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu019')">
+    </div>
+    <div class="criterion">
+      <label for="stu019-participation">Participation</label>
+      <input type="number" id="stu019-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu019')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu019-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu019-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Daly</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 20 -->
+<div id="stu020" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu020-pronunciation">Pronunciation</label>
+      <input type="number" id="stu020-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu020')">
+    </div>
+    <div class="criterion">
+      <label for="stu020-intonation">Intonation</label>
+      <input type="number" id="stu020-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu020')">
+    </div>
+    <div class="criterion">
+      <label for="stu020-communication">Communication</label>
+      <input type="number" id="stu020-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu020')">
+    </div>
+    <div class="criterion">
+      <label for="stu020-participation">Participation</label>
+      <input type="number" id="stu020-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu020')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu020-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu020-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Vouch Neang</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 21 -->
+<div id="stu021" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu021-pronunciation">Pronunciation</label>
+      <input type="number" id="stu021-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu021')">
+    </div>
+    <div class="criterion">
+      <label for="stu021-intonation">Intonation</label>
+      <input type="number" id="stu021-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu021')">
+    </div>
+    <div class="criterion">
+      <label for="stu021-communication">Communication</label>
+      <input type="number" id="stu021-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu021')">
+    </div>
+    <div class="criterion">
+      <label for="stu021-participation">Participation</label>
+      <input type="number" id="stu021-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu021')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu021-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu021-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Sorm Seyha</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 22 -->
+<div id="stu022" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu022-pronunciation">Pronunciation</label>
+      <input type="number" id="stu022-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu022')">
+    </div>
+    <div class="criterion">
+      <label for="stu022-intonation">Intonation</label>
+      <input type="number" id="stu022-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu022')">
+    </div>
+    <div class="criterion">
+      <label for="stu022-communication">Communication</label>
+      <input type="number" id="stu022-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu022')">
+    </div>
+    <div class="criterion">
+      <label for="stu022-participation">Participation</label>
+      <input type="number" id="stu022-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu022')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu022-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu022-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Rom Sopheaktra</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 23 -->
+<div id="stu023" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu023-pronunciation">Pronunciation</label>
+      <input type="number" id="stu023-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu023')">
+    </div>
+    <div class="criterion">
+      <label for="stu023-intonation">Intonation</label>
+      <input type="number" id="stu023-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu023')">
+    </div>
+    <div class="criterion">
+      <label for="stu023-communication">Communication</label>
+      <input type="number" id="stu023-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu023')">
+    </div>
+    <div class="criterion">
+      <label for="stu023-participation">Participation</label>
+      <input type="number" id="stu023-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu023')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu023-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu023-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Punleu Chhon</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 24 -->
+<div id="stu024" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu024-pronunciation">Pronunciation</label>
+      <input type="number" id="stu024-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu024')">
+    </div>
+    <div class="criterion">
+      <label for="stu024-intonation">Intonation</label>
+      <input type="number" id="stu024-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu024')">
+    </div>
+    <div class="criterion">
+      <label for="stu024-communication">Communication</label>
+      <input type="number" id="stu024-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu024')">
+    </div>
+    <div class="criterion">
+      <label for="stu024-participation">Participation</label>
+      <input type="number" id="stu024-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu024')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu024-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu024-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Venerable Oudom</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 25 -->
+<div id="stu025" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu025-pronunciation">Pronunciation</label>
+      <input type="number" id="stu025-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu025')">
+    </div>
+    <div class="criterion">
+      <label for="stu025-intonation">Intonation</label>
+      <input type="number" id="stu025-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu025')">
+    </div>
+    <div class="criterion">
+      <label for="stu025-communication">Communication</label>
+      <input type="number" id="stu025-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu025')">
+    </div>
+    <div class="criterion">
+      <label for="stu025-participation">Participation</label>
+      <input type="number" id="stu025-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu025')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu025-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu025-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Phalla Phasouy</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 26 -->
+<div id="stu026" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu026-pronunciation">Pronunciation</label>
+      <input type="number" id="stu026-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu026')">
+    </div>
+    <div class="criterion">
+      <label for="stu026-intonation">Intonation</label>
+      <input type="number" id="stu026-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu026')">
+    </div>
+    <div class="criterion">
+      <label for="stu026-communication">Communication</label>
+      <input type="number" id="stu026-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu026')">
+    </div>
+    <div class="criterion">
+      <label for="stu026-participation">Participation</label>
+      <input type="number" id="stu026-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu026')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu026-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu026-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Sreng Kimheang</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 27 -->
+<div id="stu027" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu027-pronunciation">Pronunciation</label>
+      <input type="number" id="stu027-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu027')">
+    </div>
+    <div class="criterion">
+      <label for="stu027-intonation">Intonation</label>
+      <input type="number" id="stu027-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu027')">
+    </div>
+    <div class="criterion">
+      <label for="stu027-communication">Communication</label>
+      <input type="number" id="stu027-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu027')">
+    </div>
+    <div class="criterion">
+      <label for="stu027-participation">Participation</label>
+      <input type="number" id="stu027-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu027')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu027-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu027-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Vannak Sophary</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 28 -->
+<div id="stu028" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu028-pronunciation">Pronunciation</label>
+      <input type="number" id="stu028-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu028')">
+    </div>
+    <div class="criterion">
+      <label for="stu028-intonation">Intonation</label>
+      <input type="number" id="stu028-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu028')">
+    </div>
+    <div class="criterion">
+      <label for="stu028-communication">Communication</label>
+      <input type="number" id="stu028-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu028')">
+    </div>
+    <div class="criterion">
+      <label for="stu028-participation">Participation</label>
+      <input type="number" id="stu028-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu028')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu028-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu028-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Thy Vibol</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 29 -->
+<div id="stu029" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu029-pronunciation">Pronunciation</label>
+      <input type="number" id="stu029-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu029')">
+    </div>
+    <div class="criterion">
+      <label for="stu029-intonation">Intonation</label>
+      <input type="number" id="stu029-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu029')">
+    </div>
+    <div class="criterion">
+      <label for="stu029-communication">Communication</label>
+      <input type="number" id="stu029-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu029')">
+    </div>
+    <div class="criterion">
+      <label for="stu029-participation">Participation</label>
+      <input type="number" id="stu029-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu029')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu029-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu029-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Hor Kimheang</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 30 -->
+<div id="stu030" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu030-pronunciation">Pronunciation</label>
+      <input type="number" id="stu030-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu030')">
+    </div>
+    <div class="criterion">
+      <label for="stu030-intonation">Intonation</label>
+      <input type="number" id="stu030-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu030')">
+    </div>
+    <div class="criterion">
+      <label for="stu030-communication">Communication</label>
+      <input type="number" id="stu030-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu030')">
+    </div>
+    <div class="criterion">
+      <label for="stu030-participation">Participation</label>
+      <input type="number" id="stu030-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu030')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu030-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu030-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Vann Chhayhuor</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 31 -->
+<div id="stu031" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu031-pronunciation">Pronunciation</label>
+      <input type="number" id="stu031-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu031')">
+    </div>
+    <div class="criterion">
+      <label for="stu031-intonation">Intonation</label>
+      <input type="number" id="stu031-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu031')">
+    </div>
+    <div class="criterion">
+      <label for="stu031-communication">Communication</label>
+      <input type="number" id="stu031-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu031')">
+    </div>
+    <div class="criterion">
+      <label for="stu031-participation">Participation</label>
+      <input type="number" id="stu031-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu031')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu031-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu031-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Chinyou Chea</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 32 -->
+<div id="stu032" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu032-pronunciation">Pronunciation</label>
+      <input type="number" id="stu032-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu032')">
+    </div>
+    <div class="criterion">
+      <label for="stu032-intonation">Intonation</label>
+      <input type="number" id="stu032-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu032')">
+    </div>
+    <div class="criterion">
+      <label for="stu032-communication">Communication</label>
+      <input type="number" id="stu032-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu032')">
+    </div>
+    <div class="criterion">
+      <label for="stu032-participation">Participation</label>
+      <input type="number" id="stu032-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu032')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu032-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu032-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Sarin Bunthoeun</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 33 -->
+<div id="stu033" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu033-pronunciation">Pronunciation</label>
+      <input type="number" id="stu033-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu033')">
+    </div>
+    <div class="criterion">
+      <label for="stu033-intonation">Intonation</label>
+      <input type="number" id="stu033-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu033')">
+    </div>
+    <div class="criterion">
+      <label for="stu033-communication">Communication</label>
+      <input type="number" id="stu033-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu033')">
+    </div>
+    <div class="criterion">
+      <label for="stu033-participation">Participation</label>
+      <input type="number" id="stu033-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu033')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu033-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu033-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Noa Neng</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 34 -->
+<div id="stu034" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu034-pronunciation">Pronunciation</label>
+      <input type="number" id="stu034-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu034')">
+    </div>
+    <div class="criterion">
+      <label for="stu034-intonation">Intonation</label>
+      <input type="number" id="stu034-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu034')">
+    </div>
+    <div class="criterion">
+      <label for="stu034-communication">Communication</label>
+      <input type="number" id="stu034-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu034')">
+    </div>
+    <div class="criterion">
+      <label for="stu034-participation">Participation</label>
+      <input type="number" id="stu034-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu034')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu034-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu034-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>Rom Closer</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+<!-- Student 35 -->
+<div id="stu035" class="card">
+  <div class="evaluation-criteria">
+    <div class="criterion">
+      <label for="stu035-pronunciation">Pronunciation</label>
+      <input type="number" id="stu035-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu035')">
+    </div>
+    <div class="criterion">
+      <label for="stu035-intonation">Intonation</label>
+      <input type="number" id="stu035-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu035')">
+    </div>
+    <div class="criterion">
+      <label for="stu035-communication">Communication</label>
+      <input type="number" id="stu035-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu035')">
+    </div>
+    <div class="criterion">
+      <label for="stu035-participation">Participation</label>
+      <input type="number" id="stu035-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu035')">
+    </div>
+  </div>
+
+  <div class="overall-score">
+    <h4>Overall Score</h4>
+    <p class="score-value" id="stu035-overall">0.0</p>
+    <div class="performance-visual">
+      <div class="performance-bar" id="stu035-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+    </div>
+    <div class="performance-labels">
+      <div class="performance-label poor">Poor</div>
+      <div class="performance-label average">Average</div>
+      <div class="performance-label excellent">Excellent</div>
+    </div>
+  </div>
+
+  <h3>👨‍🎓 <span>N/A</span></h3>
+  <p> <span class="emoji">💪</span><strong>Strength:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">⚠️</span><strong>Weakness:</strong> 
+  <span>Pending</span>.<br>
+  <span class="emoji">🚀</span><strong>Key Improvement:</strong> 
+  <span>Pending</span>.
+</p>
+</div>
+
+
+      <!-- Student 36 -->
+      <div id="stu036" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu036-pronunciation">Pronunciation</label>
+            <input type="number" id="stu036-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu036')">
+          </div>
+          <div class="criterion">
+            <label for="stu036-intonation">Intonation</label>
+            <input type="number" id="stu036-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu036')">
+          </div>
+          <div class="criterion">
+            <label for="stu036-communication">Communication</label>
+            <input type="number" id="stu036-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu036')">
+          </div>
+          <div class="criterion">
+            <label for="stu036-participation">Participation</label>
+            <input type="number" id="stu036-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu036')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu036-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu036-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 36</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 37 -->
+      <div id="stu037" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu037-pronunciation">Pronunciation</label>
+            <input type="number" id="stu037-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu037')">
+          </div>
+          <div class="criterion">
+            <label for="stu037-intonation">Intonation</label>
+            <input type="number" id="stu037-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu037')">
+          </div>
+          <div class="criterion">
+            <label for="stu037-communication">Communication</label>
+            <input type="number" id="stu037-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu037')">
+          </div>
+          <div class="criterion">
+            <label for="stu037-participation">Participation</label>
+            <input type="number" id="stu037-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu037')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu037-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu037-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 37</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 38 -->
+      <div id="stu038" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu038-pronunciation">Pronunciation</label>
+            <input type="number" id="stu038-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu038')">
+          </div>
+          <div class="criterion">
+            <label for="stu038-intonation">Intonation</label>
+            <input type="number" id="stu038-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu038')">
+          </div>
+          <div class="criterion">
+            <label for="stu038-communication">Communication</label>
+            <input type="number" id="stu038-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu038')">
+          </div>
+          <div class="criterion">
+            <label for="stu038-participation">Participation</label>
+            <input type="number" id="stu038-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu038')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu038-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu038-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 38</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 39 -->
+      <div id="stu039" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu039-pronunciation">Pronunciation</label>
+            <input type="number" id="stu039-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu039')">
+          </div>
+          <div class="criterion">
+            <label for="stu039-intonation">Intonation</label>
+            <input type="number" id="stu039-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu039')">
+          </div>
+          <div class="criterion">
+            <label for="stu039-communication">Communication</label>
+            <input type="number" id="stu039-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu039')">
+          </div>
+          <div class="criterion">
+            <label for="stu039-participation">Participation</label>
+            <input type="number" id="stu039-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu039')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu039-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu039-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 39</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 40 -->
+      <div id="stu040" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu040-pronunciation">Pronunciation</label>
+            <input type="number" id="stu040-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu040')">
+          </div>
+          <div class="criterion">
+            <label for="stu040-intonation">Intonation</label>
+            <input type="number" id="stu040-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu040')">
+          </div>
+          <div class="criterion">
+            <label for="stu040-communication">Communication</label>
+            <input type="number" id="stu040-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu040')">
+          </div>
+          <div class="criterion">
+            <label for="stu040-participation">Participation</label>
+            <input type="number" id="stu040-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu040')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu040-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu040-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 40</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 41 -->
+      <div id="stu041" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu041-pronunciation">Pronunciation</label>
+            <input type="number" id="stu041-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu041')">
+          </div>
+          <div class="criterion">
+            <label for="stu041-intonation">Intonation</label>
+            <input type="number" id="stu041-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu041')">
+          </div>
+          <div class="criterion">
+            <label for="stu041-communication">Communication</label>
+            <input type="number" id="stu041-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu041')">
+          </div>
+          <div class="criterion">
+            <label for="stu041-participation">Participation</label>
+            <input type="number" id="stu041-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu041')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu041-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu041-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 41</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 42 -->
+      <div id="stu042" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu042-pronunciation">Pronunciation</label>
+            <input type="number" id="stu042-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu042')">
+          </div>
+          <div class="criterion">
+            <label for="stu042-intonation">Intonation</label>
+            <input type="number" id="stu042-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu042')">
+          </div>
+          <div class="criterion">
+            <label for="stu042-communication">Communication</label>
+            <input type="number" id="stu042-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu042')">
+          </div>
+          <div class="criterion">
+            <label for="stu042-participation">Participation</label>
+            <input type="number" id="stu042-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu042')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu042-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu042-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 42</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 43 -->
+      <div id="stu043" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu043-pronunciation">Pronunciation</label>
+            <input type="number" id="stu043-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu043')">
+          </div>
+          <div class="criterion">
+            <label for="stu043-intonation">Intonation</label>
+            <input type="number" id="stu043-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu043')">
+          </div>
+          <div class="criterion">
+            <label for="stu043-communication">Communication</label>
+            <input type="number" id="stu043-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu043')">
+          </div>
+          <div class="criterion">
+            <label for="stu043-participation">Participation</label>
+            <input type="number" id="stu043-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu043')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu043-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu043-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 43</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 44 -->
+      <div id="stu044" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu044-pronunciation">Pronunciation</label>
+            <input type="number" id="stu044-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu044')">
+          </div>
+          <div class="criterion">
+            <label for="stu044-intonation">Intonation</label>
+            <input type="number" id="stu044-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu044')">
+          </div>
+          <div class="criterion">
+            <label for="stu044-communication">Communication</label>
+            <input type="number" id="stu044-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu044')">
+          </div>
+          <div class="criterion">
+            <label for="stu044-participation">Participation</label>
+            <input type="number" id="stu044-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu044')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu044-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu044-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 44</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+
+      <!-- Student 45 -->
+      <div id="stu045" class="card">
+        <div class="evaluation-criteria">
+          <div class="criterion">
+            <label for="stu045-pronunciation">Pronunciation</label>
+            <input type="number" id="stu045-pronunciation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu045')">
+          </div>
+          <div class="criterion">
+            <label for="stu045-intonation">Intonation</label>
+            <input type="number" id="stu045-intonation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu045')">
+          </div>
+          <div class="criterion">
+            <label for="stu045-communication">Communication</label>
+            <input type="number" id="stu045-communication" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu045')">
+          </div>
+          <div class="criterion">
+            <label for="stu045-participation">Participation</label>
+            <input type="number" id="stu045-participation" class="score-input" min="0" max="10" value="0" onchange="updateOverallScore('stu045')">
+          </div>
+        </div>
+        
+        <div class="overall-score">
+          <h4>Overall Score</h4>
+          <p class="score-value" id="stu045-overall">0.0</p>
+          <div class="performance-visual">
+            <div class="performance-bar" id="stu045-performance-bar" style="width: 0%; background-color: var(--poor);"></div>
+          </div>
+          <div class="performance-labels">
+            <div class="performance-label poor">Poor</div>
+            <div class="performance-label average">Average</div>
+            <div class="performance-label excellent">Excellent</div>
+          </div>
+        </div>
+        
+        <h3>👨‍🎓 <span>Student Name 45</span></h3>
+        <p>
+          <span class="emoji">⏳</span><em>Pending Review</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Student data with all 31 students
+    const studentData = {
+      stu001: "yJq39P!n",
+      stu002: "bNj2Qw7!",
+      stu003: "vKz41Cp@",
+      stu004: "tVt61GxP!",
+      stu005: "lSx88Jh#",
+      stu006: "qFb49VvB!",
+      stu007: "hPb52TzM@",
+      stu008: "rCk34Nw#",
+      stu009: "mJs55LzF!",
+      stu010: "kWp61DsT@",
+      stu011: "jRq30GxM!",
+      stu012: "iSc32AwP@",
+      stu013: "tUe89VbZ!",
+      stu014: "gXy72LwA@",
+      stu015: "eNf50QcJ!",
+      stu016: "pKr29UvB@",
+      stu017: "fCp63WhM!",
+      stu018: "aBx34TzR@",
+      stu019: "wPo71VrD!",
+      stu020: "sQa93KhB@",
+      stu021: "pGd25VtK!",
+      stu022: "yUq12BwP@",
+      stu023: "jWx76SgL!",
+      stu024: "rZc57VjX@",
+      stu025: "gZp81UtM!",
+      stu026: "cYv65KrS@",
+      stu027: "oTx37TjG!",
+      stu028: "vLm93FgB@",
+      stu029: "pKq12MsT!",
+      stu030: "wNz76FpJ@",
+      stu031: "xYs43DzL!",
+      stu032: "kHt22RvN@", // optional filler for completeness
+      stu033: "qMn54FwK!",
+      stu034: "dLp33GjX#",
+      stu035: "fWb88PqM!",
+      stu036: "sJv66TkR@",
+      stu037: "mQh44YzB!",
+      stu038: "bNx77LwD#",
+      stu039: "vTc99FpG!",
+      stu040: "pKg23HsM@",
+      stu041: "rDf55JqV!",
+      stu042: "tSm67XwK#",
+      stu043: "hVn34BzP!",
+      stu044: "jFp88LtR@",
+      stu045: "wGk22QmD!"
+    };
+
+    function login() {
+      const idInput = document.getElementById("studentId").value.trim().toLowerCase();
+      const pw = document.getElementById("password").value.trim();
+      const loading = document.getElementById("loading");
+      const errorMessage = document.getElementById("errorMessage");
+      
+      // Reset error message
+      errorMessage.style.display = "none";
+      document.getElementById("passwordHint").style.display = "none";
+
+      // Validate inputs
+      if (!idInput || !pw) {
+        showError("Please enter both your Student ID and Password");
+        return;
+      }
+
+      // Validate student ID format
+      if (!/^stu\d{3}$/.test(idInput)) {
+        showError("Student ID must be in format stuXXX (e.g. stu001)");
+        return;
+      }
+
+      // Check if student exists
+      if (!studentData[idInput]) {
+        showError("Student ID not found. Please check your ID and try again.");
+        return;
+      }
+
+      // Show loading animation
+      loading.style.display = "block";
+      
+      // Simulate loading delay
+      setTimeout(() => {
+        if (studentData[idInput] === pw) {
+          document.getElementById("evaluation").style.display = "block";
+          loading.style.display = "none";
+
+          // Hide all cards first
+          const cards = document.querySelectorAll(".card");
+          cards.forEach(card => card.style.display = "none");
+
+          // Show only the matching student card
+          const studentCard = document.getElementById(idInput);
+          if (studentCard) {
+  studentCard.classList.add("success");
+  studentCard.style.display = "block";
+  
+  // Initialize the overall score for this student
+  updateOverallScore(idInput); // Call this for all students, not just stu001
+  createConfetti();
+} else {
+            showError("Evaluation not found for this student. Please contact your teacher.");
+          }
+        } else {
+          loading.style.display = "none";
+          showError("Incorrect password. Please try again.");
+        }
+      }, 1500);
+    }
+
+    function showError(message) {
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.textContent = message;
+      errorMessage.style.display = "block";
+    }
+
+    function showPasswordHint() {
+      const idInput = document.getElementById("studentId").value.trim().toLowerCase();
+      const passwordHint = document.getElementById("passwordHint");
+      
+      if (!idInput) {
+        showError("Please enter your Student ID first");
+        return;
+      }
+
+      if (!studentData[idInput]) {
+        showError("Student ID not found");
+        return;
+      }
+
+      const password = studentData[idInput];
+      const hint = password.substring(0, 2) + "••••••";
+      passwordHint.textContent = `Password hint: ${hint} (Contact teacher for full password)`;
+      passwordHint.style.display = "block";
+    }
+
+    function updateOverallScore(studentId) {
+  // Helper function to safely get and validate scores
+  const getValidScore = (elementId) => {
+    const input = document.getElementById(elementId);
+    if (!input) return 0;
+    let value = parseFloat(input.value) || 0;
+    value = Math.max(0, Math.min(10, value)); // Clamp between 0-10
+    input.value = value; // Update input with clamped value
+    return value;
+  };
+
+  // Get all scores
+  const pronunciation = getValidScore(`${studentId}-pronunciation`);
+  const intonation = getValidScore(`${studentId}-intonation`);
+  const communication = getValidScore(`${studentId}-communication`);
+  const participation = getValidScore(`${studentId}-participation`);
+
+  // Calculate average
+  const average = (pronunciation + intonation + communication + participation) / 4;
+  const roundedAverage = Math.round(average * 10) / 10;
+
+  // Update overall score display
+  const overallElement = document.getElementById(`${studentId}-overall`);
+  if (overallElement) {
+    overallElement.textContent = roundedAverage.toFixed(1);
+  }
+
+  // Animate performance bar
+  const performanceBar = document.getElementById(`${studentId}-performance-bar`);
+  if (performanceBar) {
+    const percentage = average * 10;
+    
+    // Reset animation
+    performanceBar.style.transition = 'none';
+    performanceBar.style.width = '0%';
+    performanceBar.offsetHeight; // Force reflow
+    
+    // Animate to target width with smooth transition
+    performanceBar.style.transition = 'width 1s ease-out, background-color 1s ease-out';
+    performanceBar.style.width = `${percentage}%`;
+    
+    // Set color based on final score
+    if (average < 5) {
+      performanceBar.style.backgroundColor = 'var(--poor)';
+    } else if (average < 7.5) {
+      performanceBar.style.backgroundColor = 'var(--average)';
+    } else {
+      performanceBar.style.backgroundColor = 'var(--excellent)';
+    }
+  }
+}
+
+    function resetScores(studentId) {
+      // Set all scores to 0 for a student
+      document.getElementById(`${studentId}-pronunciation`).value = 0;
+      document.getElementById(`${studentId}-intonation`).value = 0;
+      document.getElementById(`${studentId}-communication`).value = 0;
+      document.getElementById(`${studentId}-participation`).value = 0;
+      updateOverallScore(studentId);
+    }
+
+    function createConfetti() {
+      const colors = ['#4361ee', '#3a0ca3', '#4895ef', '#4cc9f0', '#f72585'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = -10 + 'px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = Math.random() * 10 + 5 + 'px';
+        confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => {
+          confetti.remove();
+        }, 5000);
+      }
+    }
+
+    // Add event listener for Enter key
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+  </script>
+</body>
+</html>
