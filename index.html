@@ -675,6 +675,90 @@
       line-height: 1.4;
     }
 
+    /* Coupon Redemption Styles */
+    .coupon-redemption {
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .coupon-label {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+
+    .coupon-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .coupon-input {
+      padding: 8px 12px;
+      border: 1px solid var(--gray-light);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      flex-grow: 1;
+      max-width: 150px;
+    }
+
+    .coupon-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-primary);
+    }
+
+    .coupon-apply-btn {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .coupon-apply-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .coupon-details {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .coupon-details span {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .coupon-message {
+      padding: 8px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      display: none;
+    }
+
+    .coupon-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--success);
+    }
+
+    .coupon-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+    }
+
     /* Circular Score Rings */
     .score-ring-container {
       display: flex;
@@ -1573,6 +1657,8 @@
       .overall-score-value { font-size: 3rem; }
       .login-card { padding: 30px; }
       .payment-status { text-align: center; margin-top: 15px; }
+      .coupon-redemption { text-align: center; margin-top: 15px; }
+      .coupon-form { justify-content: center; }
       .fab { display: flex; }
     }
 
@@ -1685,6 +1771,23 @@
             <div>Last Paid: May 15, 2025</div>
             <div>Next Due: August 1, 2025</div>
           </div>
+        </div>
+
+        <!-- Coupon Redemption Section -->
+        <div class="coupon-redemption">
+          <p class="coupon-label">
+            Coupon Redemption <span class="khmer">(ការបញ្ចុះតម្លៃ)</span>
+          </p>
+          <div class="coupon-form">
+            <input type="text" class="coupon-input" id="couponCode" placeholder="Enter coupon code">
+            <button class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div class="coupon-details">
+            <div>Payment: <span id="paymentAmount">$200</span></div>
+            <div>Discount: <span id="discountPercent">0%</span></div>
+            <div>After Discount: <span id="amountAfterDiscount">$200</span></div>
+          </div>
+          <div class="coupon-message" id="couponMessage"></div>
         </div>
       </div>
 
@@ -2017,6 +2120,7 @@
     let currentStudent = null;
     let performanceChart = null;
     let historyVisible = false;
+    let paymentAmount = 200; // Default payment amount
 
     // Initialize particles
     function createParticles() {
@@ -2207,6 +2311,46 @@
       }
     }
 
+    // Apply coupon code
+    async function applyCoupon() {
+      const couponCode = document.getElementById('couponCode').value.trim();
+      const messageEl = document.getElementById('couponMessage');
+      
+      if (!couponCode) {
+        messageEl.textContent = 'Please enter a coupon code';
+        messageEl.className = 'coupon-message coupon-error';
+        messageEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=validateCoupon&studentId=${currentStudent.StudentID}&couponCode=${couponCode}&t=${Date.now()}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          // Update UI with coupon details
+          document.getElementById('discountPercent').textContent = `${data.discountPercent}%`;
+          document.getElementById('amountAfterDiscount').textContent = `$${data.newAmount}`;
+          
+          messageEl.textContent = data.message;
+          messageEl.className = 'coupon-message coupon-success';
+          messageEl.style.display = 'block';
+        } else {
+          // Reset discount if coupon is invalid
+          document.getElementById('discountPercent').textContent = '0%';
+          document.getElementById('amountAfterDiscount').textContent = `$${paymentAmount}`;
+          
+          messageEl.textContent = data.message || 'Invalid coupon code';
+          messageEl.className = 'coupon-message coupon-error';
+          messageEl.style.display = 'block';
+        }
+      } catch (error) {
+        messageEl.textContent = 'Error validating coupon. Please try again.';
+        messageEl.className = 'coupon-message coupon-error';
+        messageEl.style.display = 'block';
+      }
+    }
+
     // Login function
     async function login() {
       const studentId = document.getElementById('studentId').value.trim().toLowerCase();
@@ -2300,6 +2444,11 @@
       document.getElementById('strengthText').textContent = currentStudent.Strength || 'Not specified';
       document.getElementById('weaknessText').textContent = currentStudent.Weakness || 'Not specified';
       document.getElementById('improvementText').textContent = currentStudent.Improvement || 'Not specified';
+
+      // Initialize coupon redemption section
+      paymentAmount = currentStudent.PaymentAmount || 200;
+      document.getElementById('paymentAmount').textContent = `$${paymentAmount}`;
+      document.getElementById('amountAfterDiscount').textContent = `$${paymentAmount}`;
 
       // Load additional data
       await Promise.all([
@@ -2696,6 +2845,13 @@
       
       // Set up scroll handler
       window.addEventListener('scroll', handleScroll);
+      
+      // Set up coupon code input to respond to Enter key
+      document.getElementById('couponCode').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          applyCoupon();
+        }
+      });
     });
   </script>
 </body>
